@@ -1,0 +1,22 @@
+s3:
+  exclude:
+    names_regex:
+      - ^test
+EC2Subnet:
+  exclude:
+    names_regex:
+      - default-mx-central-1a
+      - default-mx-central-1b
+      - default-mx-central-1c
+InternetGateway:
+  exclude:
+    names_regex:
+      - default
+VPC:
+  exclude:
+    names_regex:
+      - default
+RouteTable:
+  include:
+    names_regex:
+      - ^public-rt$

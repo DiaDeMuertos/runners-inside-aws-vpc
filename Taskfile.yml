@@ -1,0 +1,154 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: '3'
+
+tasks:
+  start-project:
+    desc: start the project
+    cmd: |
+      cd {{.dir}}
+      if [ ! -d ".terraform" ]; then
+          terraform init -backend-config=backend.hcl
+      fi
+    silent: true
+  basic-aws-s3:
+    desc: basic-aws-s3 example
+    vars:
+      dir: 'terraform/test/basic-aws-s3'
+    deps:
+      - task: start-project
+        vars: { dir: '{{.dir}}' }
+    cmd: |
+      cd {{.dir}}
+      terraform {{.CLI_ARGS}}
+    silent: true
+  assume-role-script-test:
+    desc: test assume role with aws cli
+    cmds:
+      - ./assume.sh
+      - ./assume.sh assume
+    silent: true
+  env-aws-test:
+    desc: test aws cli with env variables
+    env:
+      AWS_ACCESS_KEY_ID:
+        sh: jq -r '.Credentials.AccessKeyId' credentials.json
+      AWS_SECRET_ACCESS_KEY: 
+        sh: jq -r '.Credentials.SecretAccessKey' credentials.json
+      AWS_SESSION_TOKEN:
+        sh: jq -r '.Credentials.SessionToken' credentials.json
+    cmds:
+      - "echo AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID"
+      - "echo AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY"
+      - "echo AWS_SESSION_TOKEN: $AWS_SESSION_TOKEN"
+    silent: true
+  run-aws-cli-test:
+    desc: test aws cli
+    env:
+      AWS_ACCESS_KEY_ID:
+        sh: jq -r '.Credentials.AccessKeyId' credentials.json
+      AWS_SECRET_ACCESS_KEY: 
+        sh: jq -r '.Credentials.SecretAccessKey' credentials.json
+      AWS_SESSION_TOKEN:
+        sh: jq -r '.Credentials.SessionToken' credentials.json
+    cmds:
+      - aws s3 ls
+      - aws iam list-users
+    silent: true
+  basic-aws-vpc:
+    desc: basic-aws-vpc example
+    vars:
+      dir: 'terraform/test/basic-aws-vpc'
+    deps:
+      - task: start-project
+        vars: { dir: '{{.dir}}' }
+    cmd: |
+      cd {{.dir}}
+      terraform {{.CLI_ARGS}}
+    silent: true
+  nuke-test-account:
+    desc: test nuke the account
+    env:
+      AWS_ACCESS_KEY_ID:
+        sh: jq -r '.Credentials.AccessKeyId' credentials.json
+      AWS_SECRET_ACCESS_KEY: 
+        sh: jq -r '.Credentials.SecretAccessKey' credentials.json
+      AWS_SESSION_TOKEN:
+        sh: jq -r '.Credentials.SessionToken' credentials.json
+    cmds:
+      - cloud-nuke aws --dry-run --region mx-central-1 --config config.yaml
+    silent: true  
+  test-account-basic-aws-vpc:
+    desc: basic-aws-vpc example
+    env:
+      AWS_ACCESS_KEY_ID:
+        sh: jq -r '.Credentials.AccessKeyId' credentials.json
+      AWS_SECRET_ACCESS_KEY: 
+        sh: jq -r '.Credentials.SecretAccessKey' credentials.json
+      AWS_SESSION_TOKEN:
+        sh: jq -r '.Credentials.SessionToken' credentials.json
+      AWS_DEFAULT_REGION: mx-central-1    
+    vars:
+      dir: 'terraform/test/basic-aws-vpc'
+    deps:
+      - task: start-project
+        vars: { dir: '{{.dir}}' }
+    cmd: |
+      cd {{.dir}}
+      terraform {{.CLI_ARGS}}
+    silent: true
+  test-account-basic-aws-ec2:
+    desc: basic-aws-ec2 example
+    env:
+      AWS_ACCESS_KEY_ID:
+        sh: jq -r '.Credentials.AccessKeyId' credentials.json
+      AWS_SECRET_ACCESS_KEY: 
+        sh: jq -r '.Credentials.SecretAccessKey' credentials.json
+      AWS_SESSION_TOKEN:
+        sh: jq -r '.Credentials.SessionToken' credentials.json
+      AWS_DEFAULT_REGION: mx-central-1    
+    vars:
+      dir: 'terraform/test/basic-aws-ec2'
+    deps:
+      - task: start-project
+        vars: { dir: '{{.dir}}' }
+    cmd: |
+      cd {{.dir}}
+      terraform {{.CLI_ARGS}}
+    silent: true
+  
+  
+  
+  # sanity-test-go:
+  #   desc: test build with go
+  #   cmd: |
+  #     cd go/test
+  #     go test -v -timeout 30m go_sanity_test.go
+  #   silent: true
+  # basic-aws-s3-test-go:
+  #   desc: test build with go
+  #   cmd: |
+  #     cd go/test
+  #     go test -v -timeout 30m basic_aws_s3_test.go
+  #   silent: true
+  # check-terraform-security:
+  #   desc: check security with tfsec
+  #   vars:
+  #     dir: 'terraform/test/basic-aws-s3'
+  #   cmd: |
+  #     cd {{.dir}}
+  #     tfsec .
+  #   silent: true
+  # basic-aws-s3-test-go-with-stages:
+  # desc: test build with go and stages
+  # cmd: |
+  #   cd go/test
+  #   SKIP_mock=true \
+  #   go test -v -timeout 30m -run TestAwsS3WithStages basic_aws_s3_with_stages_test.go
+  # silent: true
+
+###
+# NOTES
+# <to run task with no env variables from the current shell> 
+# env -i PATH=$PATH task run-aws-cli-test
+###
