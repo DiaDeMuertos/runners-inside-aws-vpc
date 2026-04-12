@@ -64,7 +64,6 @@ jobs:
           cd go 
           go mod tidy
       - name: Run Terratest
-        run: |
-          echo pwd
-          # cd go
-          # go test -v -timeout 30m ./sanity_test.go
+        run: |          
+          cd go
+          go test -v -timeout 30m ./sanity_test.go
