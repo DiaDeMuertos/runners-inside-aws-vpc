@@ -55,8 +55,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Set up AWS CLI
-        uses: aws-actions/setup-aws-cli@v2
       - name: Configure AWS credentials (assume role)
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -76,5 +74,7 @@ jobs:
         run: |          
           cd go
           go test -v -timeout 30m ./sanity_test.go
-      - name: get identity
-        run: aws sts get-caller-identity
+      - name: Sts GetCallerIdentity
+        shell: bash
+        run: |
+          aws sts get-caller-identity
