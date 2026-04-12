@@ -1,4 +1,4 @@
-name: Terraform Apply
+name: Terraform/GO/Runner test
 
 on:
   push:
@@ -38,12 +38,11 @@ jobs:
   #       run: terraform apply -auto-approve
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true   # Opt in to Node.js 24 now
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: hello world
         run: echo "Hello, World!"
