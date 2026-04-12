@@ -61,7 +61,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-          role-to-assume: arn:aws:iam::583664563303:role/OrganizationAccountAccessRole
+          # role-to-assume: arn:aws:iam::583664563303:role/OrganizationAccountAccessRole
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
@@ -76,3 +76,5 @@ jobs:
           go test -v -timeout 30m ./sanity_test.go
       - name: aws list all ec2 instaces
         run: aws ec2 describe-instances
+      - name: aws list all users
+        run: aws iam list-users
