@@ -55,6 +55,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Configure AWS credentials (assume role)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID}}:role/OrganizationAccountAccessRole
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
@@ -63,7 +70,9 @@ jobs:
         run: |
           cd go 
           go mod tidy
-      - name: Run Terratest
+      - name: Run sanity test
         run: |          
           cd go
           go test -v -timeout 30m ./sanity_test.go
+      - name: aws list all ec2 instaces
+        run: aws ec2 describe-instances
