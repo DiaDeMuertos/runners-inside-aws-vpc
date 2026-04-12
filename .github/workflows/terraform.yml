@@ -55,10 +55,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: aws-cli
-        uses: hannut91/aws-cli@1.18.43
-        with:
-          args: --version
       - name: Configure AWS credentials (assume role)
         uses: aws-actions/configure-aws-credentials@v4
         with:
