@@ -16,7 +16,7 @@ sudo -u ubuntu -i tar -xzf /home/ubuntu/actions-runner/actions-runner-linux-x64-
 # Configure the runner as ubuntu (non-interactive)
 sudo -u ubuntu -i /home/ubuntu/actions-runner/config.sh \
   --url https://github.com/DiaDeMuertos/runners-inside-aws-vpc \
-  --token AABJVPHWXGYQOQFNTADJ4WLJ3LSLU \
+  --token AABJVPG5T4Q7MIDASVIGPX3J3QCM4 \
   --name ec2-runner-01 \
   --runnergroup Default \
   --labels linux,aws,test \
