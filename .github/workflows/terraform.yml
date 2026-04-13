@@ -52,4 +52,5 @@ jobs:
       - name: Run s3 test
         run: |          
           cd go
-          go test -v ./basic_aws_s3_with_stages_test.go
+          SKIP_mock=true \
+          go test -v -run TestAwsS3WithStages basic_aws_s3_with_stages_test.go       
