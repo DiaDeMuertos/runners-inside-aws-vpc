@@ -134,7 +134,14 @@ tasks:
     cmd: |
       cd {{.dir}}
       terraform {{.CLI_ARGS}}
-    silent: true  
+    silent: true
+  basic-aws-s3-test-go-with-stages:
+    desc: test build with go and stages
+    cmd: |
+      cd go/
+      SKIP_mock=true \
+      go test -v -timeout 30m -run TestAwsS3WithStages basic_aws_s3_with_stages_test.go
+    silent: true
   
   # sanity-test-go:
   #   desc: test build with go

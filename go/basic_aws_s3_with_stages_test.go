@@ -14,7 +14,7 @@ func TestAwsS3WithStages(t *testing.T) {
 	var bucketName string = "terraform-up-and-running-state-8358497072"
 
 	// Define working directory
-	workingDir := "../../terraform/test/basic-aws-s3/"
+	workingDir := "../terraform/test/basic-aws-s3/"
 
 	// Stage 1: Setup
 	test_structure.RunTestStage(t, "setup", func() {
