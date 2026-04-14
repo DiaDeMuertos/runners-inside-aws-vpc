@@ -44,7 +44,7 @@ func TestAwsS3WithStages(t *testing.T) {
 			t.Error("Bucket name output is empty!")
 		}
 
-		if "bucketNameOutput" != bucketName {
+		if bucketNameOutput != bucketName {
 			t.Errorf("Expected bucket name to be %s, but got %s", bucketNameOutput, bucketName)
 		}
 	})
