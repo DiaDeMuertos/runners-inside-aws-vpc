@@ -41,11 +41,11 @@ func TestAwsS3WithStages(t *testing.T) {
 		// Example: check output
 		bucketNameOutput := terraform.Output(t, terraformOptions, "name")
 		if bucketNameOutput == "" {
-			t.Fatal("Bucket name output is empty!")
+			t.Error("Bucket name output is empty!")
 		}
 
-		if bucketNameOutput != bucketName {
-			t.Fatalf("Expected bucket name to be %s, but got %s", bucketNameOutput, bucketName)
+		if "bucketNameOutput" != bucketName {
+			t.Errorf("Expected bucket name to be %s, but got %s", bucketNameOutput, bucketName)
 		}
 	})
 
