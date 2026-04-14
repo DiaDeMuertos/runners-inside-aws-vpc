@@ -11,7 +11,7 @@ import (
 func TestAwsS3WithStages(t *testing.T) {
 	t.Parallel()
 
-	var bucketName string = "terraform-up-and-running-state-8358497072"
+	var bucketName string = "yyyterraform-up-and-running-state-8358497072"
 
 	// Define working directory
 	workingDir := "../terraform/test/basic-aws-s3/"
@@ -38,9 +38,12 @@ func TestAwsS3WithStages(t *testing.T) {
 		t.Log("<-- Running validate stage -->")
 		terraformOptions := test_structure.LoadTerraformOptions(t, workingDir)
 
-		// Example: check output
-		bucketNameOutput := terraform.OutputRequired(t, terraformOptions, "name")
-		t.Logf("[VALIDATE] LOG: bucket_name=%s", bucketNameOutput)
+		bucketNameOutputRaw := terraform.Output(t, terraformOptions, "name")
+		t.Logf("[VALIDATE] LOG: name:%s", bucketNameOutputRaw)
+
+		fooOutput := terraform.Output(t, terraformOptions, "foo")
+		t.Logf("[VALIDATE] LOG: foo=%s", fooOutput)
+
 		// if bucketNameOutput == "" {
 		// 	t.Error("Bucket name output is empty!")
 		// }
