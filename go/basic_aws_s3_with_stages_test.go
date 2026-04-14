@@ -2,7 +2,9 @@ package test
 
 import (
 	"fmt"
+	"math/rand"
 	"testing"
+	"time"
 
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	test_structure "github.com/gruntwork-io/terratest/modules/test-structure"
@@ -11,7 +13,9 @@ import (
 func TestAwsS3WithStages(t *testing.T) {
 	t.Parallel()
 
-	var bucketName string = "yyyterraform-up-and-running-state-8358497072"
+	var bucketName string = fmt.Sprintf("terraform-up-and-running-state-%d", time.Now().Unix())
+
+	rand.Seed(time.Now().UnixNano())
 
 	// Define working directory
 	workingDir := "../terraform/test/basic-aws-s3/"
