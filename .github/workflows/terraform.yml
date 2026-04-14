@@ -3,14 +3,14 @@ name: Terraform/GO/Runner test
 on:
   push:
     branches:
-      - 'dev'
+      - "dev"
 
 jobs:
   test:
     # runs-on: self-hosted
     runs-on: ubuntu-latest
     env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true   # Opt in to Node.js 24 now
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true # Opt in to Node.js 24 now
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -21,7 +21,7 @@ jobs:
   go-test:
     runs-on: ubuntu-latest
     env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true   # Opt in to Node.js 24 now
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true # Opt in to Node.js 24 now
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -40,17 +40,17 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: '1.26.1'
+          go-version: "1.26.1"
       - name: Install dependencies
         run: |
           cd go 
           go mod tidy
       - name: Run sanity test
-        run: |          
+        run: |
           cd go
           go test -v -timeout 30m ./sanity_test.go
       - name: Run s3 test
-        run: |          
+        run: |
           cd go
           SKIP_mock=true \
-          go test -v -run TestAwsS3WithStages basic_aws_s3_with_stages_test.go       
+          go test -v -timeout 1m -run TestAwsS3WithStages basic_aws_s3_with_stages_test.go
