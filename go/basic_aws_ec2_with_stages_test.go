@@ -1,20 +1,21 @@
 package test
 
 import (
-	"fmt"
 	"testing"
+	"time"
 
+	http_helper "github.com/gruntwork-io/terratest/modules/http-helper"
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	test_structure "github.com/gruntwork-io/terratest/modules/test-structure"
 )
 
-func TestAwsS3WithStages(t *testing.T) {
+func TestAwsEC2WithStages(t *testing.T) {
 	t.Parallel()
 
-	var bucketName string = "terraform-up-and-running-state-8358497072"
+	// var instanceName string = ""
 
 	// Define working directory
-	workingDir := "../terraform/test/basic-aws-s3/"
+	workingDir := "../terraform/test/basic-aws-ec2/"
 
 	// Stage 1: Setup
 	test_structure.RunTestStage(t, "setup", func() {
@@ -22,8 +23,8 @@ func TestAwsS3WithStages(t *testing.T) {
 
 		terraformOptions := &terraform.Options{
 			TerraformDir: workingDir,
-			Vars: map[string]interface{}{
-				"name": fmt.Sprintf("%s", bucketName),
+			Vars:         map[string]interface{}{
+				// "name": fmt.Sprintf("%s", instanceName),
 			},
 		}
 		// Save options for later stages
@@ -39,15 +40,21 @@ func TestAwsS3WithStages(t *testing.T) {
 		terraformOptions := test_structure.LoadTerraformOptions(t, workingDir)
 
 		// Example: check output
-		bucketNameOutput := terraform.Output(t, terraformOptions, "name")
-		t.Logf("[VALIDATE] LOG: bucket_name=%s", bucketNameOutput)
-		if bucketNameOutput == "" {
-			t.Error("Bucket name output is empty!")
-		}
+		publicIP := terraform.Output(t, terraformOptions, "public_ip")
+		privateIP := terraform.Output(t, terraformOptions, "private_ip")
 
-		if bucketNameOutput != bucketName {
-			t.Errorf("Expected bucket name to be %s, but got %s", bucketNameOutput, bucketName)
-		}
+		time.Sleep(2 * time.Minute)
+
+		url := "http://" + Ternary(publicIP != "", publicIP, privateIP)
+		t.Logf("[VALIDATE] LOG: url=%s", url)
+
+		// Retry until the instance responds with 200 OK
+		expectedStatus := 200
+		expectedBody := "<h1>Hello, World!</h1>"
+		maxRetries := 3
+		timeBetweenRetries := 2 * time.Second
+
+		http_helper.HttpGetWithRetry(t, url, nil, expectedStatus, expectedBody, maxRetries, timeBetweenRetries)
 	})
 
 	// Stage 3: Teardown
@@ -61,10 +68,9 @@ func TestAwsS3WithStages(t *testing.T) {
 	})
 }
 
-func TestIsWorking(t *testing.T) {
-	t.Parallel()
-
-	fmt.Println()
-	fmt.Println("If you see this text, it's working!")
-	fmt.Println()
+func Ternary[T any](condition bool, a, b T) T {
+	if condition {
+		return a
+	}
+	return b
 }
