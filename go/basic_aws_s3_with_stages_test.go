@@ -42,11 +42,11 @@ func TestAwsS3WithStages(t *testing.T) {
 		t.Log("<-- Running validate stage -->")
 		terraformOptions := test_structure.LoadTerraformOptions(t, workingDir)
 
-		bucketNameOutputRaw := terraform.Output(t, terraformOptions, "name")
-		t.Logf("[VALIDATE] LOG: name:%s", bucketNameOutputRaw)
-
 		fooOutput := terraform.Output(t, terraformOptions, "foo")
 		t.Logf("[VALIDATE] LOG: foo=%s", fooOutput)
+
+		bucketNameOutputRaw := terraform.Output(t, terraformOptions, "name")
+		t.Logf("[VALIDATE] LOG: name:%s", bucketNameOutputRaw)
 
 		// if bucketNameOutput == "" {
 		// 	t.Error("Bucket name output is empty!")
