@@ -17,7 +17,6 @@ provider "aws" {
   }
 }
 
-
 # RESOURCES
 
 module "bucket_s3" {
