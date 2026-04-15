@@ -2,7 +2,6 @@ package test
 
 import (
 	"fmt"
-	"math/rand"
 	"testing"
 	"time"
 
@@ -14,8 +13,6 @@ func TestAwsS3WithStages(t *testing.T) {
 	t.Parallel()
 
 	var bucketName string = fmt.Sprintf("terraform-up-and-running-state-%d", time.Now().Unix())
-
-	rand.Seed(time.Now().UnixNano())
 
 	// Define working directory
 	workingDir := "../terraform/test/basic-aws-s3/"
@@ -40,21 +37,18 @@ func TestAwsS3WithStages(t *testing.T) {
 	// Stage 2: Validate
 	test_structure.RunTestStage(t, "validate", func() {
 		t.Log("<-- Running validate stage -->")
-		// terraformOptions := test_structure.LoadTerraformOptions(t, workingDir)
+		terraformOptions := test_structure.LoadTerraformOptions(t, workingDir)
 
-		// fooOutput := strings.TrimSpace(terraform.Output(t, terraformOptions, "foo"))
-		// t.Logf("[VALIDATE] LOG: foo=%s", fooOutput)
+		bucketNameOutput := terraform.Output(t, terraformOptions, "name")
+		t.Logf("[VALIDATE] LOG: name:%s", bucketNameOutput)
 
-		// bucketNameOutputRaw := strings.TrimSpace(terraform.Output(t, terraformOptions, "name"))
-		// t.Logf("[VALIDATE] LOG: name:%s", bucketNameOutputRaw)
+		if bucketNameOutput == "" {
+			t.Error("[ERROR] LOG: Bucket name output is empty!")
+		}
 
-		// if bucketNameOutput == "" {
-		// 	t.Error("Bucket name output is empty!")
-		// }
-
-		// if bucketNameOutput != bucketName {
-		// 	t.Errorf("Expected bucket name to be %s, but got %s", bucketNameOutput, bucketName)
-		// }
+		if bucketNameOutput != bucketName {
+			t.Errorf("[ERROR] LOG: Expected bucket name to be %s, but got %s", bucketNameOutput, bucketName)
+		}
 	})
 
 	// Stage 3: Teardown
