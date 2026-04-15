@@ -3,6 +3,7 @@ package test
 import (
 	"fmt"
 	"math/rand"
+	"strings"
 	"testing"
 	"time"
 
@@ -42,10 +43,10 @@ func TestAwsS3WithStages(t *testing.T) {
 		t.Log("<-- Running validate stage -->")
 		terraformOptions := test_structure.LoadTerraformOptions(t, workingDir)
 
-		fooOutput := terraform.Output(t, terraformOptions, "foo")
+		fooOutput := strings.TrimSpace(terraform.Output(t, terraformOptions, "foo"))
 		t.Logf("[VALIDATE] LOG: foo=%s", fooOutput)
 
-		bucketNameOutputRaw := terraform.Output(t, terraformOptions, "name")
+		bucketNameOutputRaw := strings.TrimSpace(terraform.Output(t, terraformOptions, "name"))
 		t.Logf("[VALIDATE] LOG: name:%s", bucketNameOutputRaw)
 
 		// if bucketNameOutput == "" {
