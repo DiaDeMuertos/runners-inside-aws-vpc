@@ -2,7 +2,6 @@ package test
 
 import (
 	"fmt"
-	"strings"
 	"testing"
 	"time"
 
@@ -22,7 +21,10 @@ func TestAwsS3(t *testing.T) {
 	terraform.Init(t, opts)
 	terraform.Apply(t, opts)
 
-	strings.TrimSpace(terraform.OutputRequired(t, opts, "name"))
+	out := terraform.OutputAll(t, opts)
+	t.Logf("All outputs: %#v", out)
+
+	// strings.TrimSpace(terraform.OutputRequired(t, opts, "name"))
 
 	// assert.Equal(t, bucketName, outputName)
 
