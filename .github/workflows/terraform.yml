@@ -7,8 +7,8 @@ on:
 
 jobs:
   test:
-    # runs-on: self-hosted
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
+    # runs-on: ubuntu-latest
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true # Opt in to Node.js 24 now
     steps:
@@ -45,17 +45,17 @@ jobs:
         run: |
           cd go 
           go mod tidy
-      # - name: Run sanity test
-      #   run: |
-      #     cd go
-      #     go test -v -timeout 30m ./sanity_test.go
+      - name: Run sanity test
+        run: |
+          cd go
+          go test -v -timeout 30m ./sanity_test.go
       - name: Run s3 test with stages
         run: |
           cd go
           SKIP_mock=true \
           go test -v -timeout 2m -run TestAwsS3WithStages basic_aws_s3_with_stages_test.go
-      # - name: Run s3 test
-      #   run: |
-      #     cd go
-      #     SKIP_mock=true \
-      #     go test -v -timeout 2m -run TestAwsS3 basic_aws_s3_test.go
+      - name: Run s3 test
+        run: |
+          cd go
+          SKIP_mock=true \
+          go test -v -timeout 2m -run TestAwsS3 basic_aws_s3_test.go
