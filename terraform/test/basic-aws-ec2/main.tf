@@ -28,8 +28,8 @@ module "ec2" {
   name                        = "public-ec2"
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = "t3.micro"
-  # subnet_id                   = "subnet-043441fd4a6797dd4"
-  # vpc_id                      = "vpc-0682ea7fd57ecc41f"
+  # subnet_id                   = "subnet-05b2fa0b85878119c"
+  # vpc_id                      = "vpc-00ae2181a32c08f81"
   associate_public_ip_address = true
 
   user_data = templatefile("${path.module}/user-data.sh", {

@@ -28,8 +28,8 @@ module "ec2_runner" {
   name                        = "runner-ec2"
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = "t3.micro"
-  subnet_id                   = "subnet-0f9070bc651ea424d"
-  vpc_id                      = "vpc-00ae2181a32c08f81"
+  # subnet_id                   = "subnet-05b2fa0b85878119c"
+  # vpc_id                      = "vpc-00ae2181a32c08f81"
   associate_public_ip_address = true
 
   user_data = templatefile("${path.module}/runner_setup.sh", {})

@@ -117,21 +117,14 @@ tasks:
       terraform {{.CLI_ARGS}}
     silent: true
   test-account-basic-aws-ec2-runner:
-    desc: basic-aws-ec2-runner example
-    env:
-      AWS_ACCESS_KEY_ID:
-        sh: jq -r '.Credentials.AccessKeyId' credentials.json
-      AWS_SECRET_ACCESS_KEY:
-        sh: jq -r '.Credentials.SecretAccessKey' credentials.json
-      AWS_SESSION_TOKEN:
-        sh: jq -r '.Credentials.SessionToken' credentials.json
-      AWS_DEFAULT_REGION: mx-central-1
+    desc: basic-aws-ec2-runner example    
     vars:
       dir: 'terraform/test/basic-aws-ec2-runner'
     deps:
       - task: start-project
         vars: { dir: '{{.dir}}' }
     cmd: |
+      source aws_creds.sh {{.user}}      
       cd {{.dir}}
       terraform {{.CLI_ARGS}}
     silent: true
@@ -178,9 +171,12 @@ tasks:
         export AWS_SESSION_TOKEN=$(jq -r '.Credentials.SessionToken' credentials.json)
       fi      
       aws sts get-caller-identity
-      cd go
-      # TF_LOG=DEBUG \
-      # TF_LOG_PATH=./terraform-debug.log \
+      cd go      
+      STAGES={{.skip}}      
+      IFS=','
+      for stage in $STAGES; do
+        export SKIP_$stage=true
+      done      
       SKIP_mock=true \
       go test -v -timeout 1m -run TestAwsS3WithStages basic_aws_s3_with_stages_test.go
     silent: true

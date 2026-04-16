@@ -3,7 +3,7 @@ name: Terraform/GO/Runner test
 on:
   push:
     branches:
-      - "dev"
+      - "devx"
 
 jobs:
   test:
